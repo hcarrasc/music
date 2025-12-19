@@ -67,26 +67,10 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
         };
     }, [audioFile]);
 
-    interface Picture {
-        data: number[];
-        format: string;
-    }
-
-    interface Tags {
-        title?: string;
-        artist?: string;
-        album?: string;
-        picture?: Picture;
-    }
-
-    interface TagData {
-        tags: Tags;
-    }
-
     return (
-        <div className="">
-            <div style={{ maxWidth: 400 }}>
-                {cover && <img src={cover} alt="Cover" style={{ width: '100%', marginTop: 10 }} />}
+        <section className="audio-player">
+            <div className="cover-container">{cover && <img src={cover} alt="Cover" />}</div>
+            <div className="controls-container">
                 <h3>
                     {metadata.artist || 'Artista desconocido'} -{' '}
                     {metadata.title || 'Título desconocido'}
@@ -94,6 +78,6 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
                 <div ref={waveformRef} />
                 <button onClick={handlePlayPause}>Play / Pause</button>
             </div>
-        </div>
+        </section>
     );
 }

@@ -18,7 +18,8 @@ export default function App() {
     };
 
     return (
-        <div style={{ padding: 20 }}>
+        <div className="app-container">
+            <AudioPlayer audioFile={selectedAudioFile} />
             <input type="file" webkitdirectory="true" multiple onChange={handleFolder} />
             <ul>
                 {audioFiles.map((file, index) => (
@@ -27,8 +28,6 @@ export default function App() {
                     </li>
                 ))}
             </ul>
-            <h2>Reproductor MP3 🎧</h2>
-            <AudioPlayer audioFile={selectedAudioFile} />
         </div>
     );
 }
