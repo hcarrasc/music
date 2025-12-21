@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { parseBlob } from 'music-metadata';
 import music_placeholder from '../assets/music_placeholder.png';
+import play from '../assets/play.png';
+import back from '../assets/back.png';
+import next from '../assets/next.png';
 
 export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
     const waveformRef = useRef<HTMLDivElement>(null);
@@ -51,9 +54,9 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
 
         const ws = WaveSurfer.create({
             container: waveformRef.current,
-            waveColor: '#9398d8ff',
+            waveColor: '#979effff',
             progressColor: '#2563eb',
-            cursorColor: '#111827',
+            cursorColor: '#ffffffff',
             height: 50,
         });
         wavesurferRef.current = ws;
@@ -76,13 +79,23 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
                     <img src={music_placeholder} alt="Placeholder" />
                 )}
             </div>
-            <div className="controls-container">
+            <div className="metadata-container">
                 <h3>
                     {metadata.artist || 'Artista desconocido'} -{' '}
                     {metadata.title || 'Título desconocido'}
                 </h3>
                 <div ref={waveformRef} />
-                <button onClick={handlePlayPause}>Play / Pause</button>
+                <div className="controls-container">
+                    <button onClick={handlePlayPause} className="btn-control">
+                        <img src={back} alt="Back" />
+                    </button>
+                    <button onClick={handlePlayPause} className="btn-control">
+                        <img src={play} alt="Play/Pause" />
+                    </button>
+                    <button onClick={handlePlayPause} className="btn-control">
+                        <img src={next} alt="Next" />
+                    </button>
+                </div>
             </div>
         </section>
     );

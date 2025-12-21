@@ -34,16 +34,33 @@ body {
 .cover-container img {
 	height: 100%;
 }
-.controls-container {
+.metadata-container {
 	padding: 2rem;
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
 	flex: 1;
 }
-.controls-container h3 {
+.metadata-container h3 {
 	margin-top: 1.5rem;
-	font-size: 1.5rem;
+	font-size: 1.9rem;
+}
+.controls-container {
+    display: flex;
+    gap: 1.5rem;
+}
+.btn-control {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.btn-control img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.input-file {
+    margin-top: 2rem
 }
 .track-list {
 	margin-top: 2rem;
