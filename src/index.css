@@ -61,6 +61,20 @@ body {
     width: 2.5rem;
     height: 2.5rem;
 }
+.time-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+.time{
+    font-size: 1rem;
+    background-color: #000000;
+    padding: 0.5rem 0.5rem;
+}
+.waveform{
+    flex: 1;
+}
 .input-file {
     margin-top: 2rem
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { parseBlob } from 'music-metadata';
 import music_placeholder from '../assets/music_placeholder.png';
@@ -16,10 +16,18 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
     );
     const [cover, setCover] = useState<string | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [totalTime, setTotalTime] = useState(0);
 
-    const handlePlayPause = () => {
+    const handlePlayPause = useCallback(() => {
         wavesurferRef.current?.playPause();
-        setIsPlaying(!isPlaying);
+        setIsPlaying((prev) => !prev);
+    }, []);
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     useEffect(() => {
@@ -50,7 +58,7 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
                 URL.revokeObjectURL(coverUrl);
             }
         };
-    }, [audioFile]);
+    }, [audioFile, handlePlayPause]);
 
     useEffect(() => {
         if (!audioFile || !waveformRef.current) return;
@@ -64,32 +72,24 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
             barWidth: 3,
             barGap: 1,
             barRadius: 2,
+            cursorWidth: 3,
         });
         wavesurferRef.current = ws;
 
         const url = URL.createObjectURL(audioFile);
         ws.load(url);
+        wavesurferRef.current.on('audioprocess', (time) => {
+            setCurrentTime(time);
+        });
+        wavesurferRef.current.on('ready', () => {
+            setTotalTime(ws.getDuration());
+        });
 
         return () => {
             ws.destroy();
             URL.revokeObjectURL(url);
         };
     }, [audioFile]);
-
-    useEffect(() => {
-        const ws = wavesurferRef.current;
-        if (!ws) return;
-
-        const handleFinish = () => {
-            ws.pause();
-        };
-
-        ws.on('finish', handleFinish);
-
-        return () => {
-            ws.un('finish', handleFinish);
-        };
-    }, []);
 
     return (
         <section className="audio-player">
@@ -106,7 +106,7 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
                         ? `${metadata.artist} - ${metadata.title}`
                         : audioFile?.name}
                 </h3>
-                <div ref={waveformRef} />
+
                 <div className="controls-container">
                     <button onClick={handlePlayPause} className="btn-control">
                         <img src={back} alt="Back" />
@@ -117,6 +117,11 @@ export function AudioPlayer({ audioFile }: { audioFile: File | null }) {
                     <button onClick={handlePlayPause} className="btn-control">
                         <img src={next} alt="Next" />
                     </button>
+                </div>
+                <div className="time-container">
+                    <div className="time">{formatTime(currentTime)}</div>
+                    <div className="waveform" ref={waveformRef} />
+                    <div className="time">{formatTime(totalTime)}</div>
                 </div>
             </div>
         </section>

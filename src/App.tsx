@@ -50,42 +50,42 @@ export default function App() {
                 multiple
                 onChange={handleFolder}
             />
-            <section className="track-list"></section>
-
-            <table className="tabla-zebra">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th> </th>
-                        <th>Artista</th>
-                        <th>Titulo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {audioFiles.map((audioFile, index) => (
-                        <tr key={index} onClick={(e) => handleMp3(e, audioFile.file)}>
-                            <td>{index + 1}</td>
-                            <td>
-                                <img
-                                    className="cover-table"
-                                    src={
-                                        audioFile.picture
-                                            ? URL.createObjectURL(
-                                                  new Blob(
-                                                      [new Uint8Array(audioFile.picture.data)],
-                                                      { type: audioFile.picture.format },
-                                                  ),
-                                              )
-                                            : music_placeholder
-                                    }
-                                />
-                            </td>
-                            <td>{audioFile.artist ? audioFile.artist : audioFile.file.name}</td>
-                            <td>{audioFile.title}</td>
+            <section className="track-list">
+                <table className="tabla-zebra">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th> </th>
+                            <th>Artista</th>
+                            <th>Titulo</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {audioFiles.map((audioFile, index) => (
+                            <tr key={index} onClick={(e) => handleMp3(e, audioFile.file)}>
+                                <td>{index + 1}</td>
+                                <td>
+                                    <img
+                                        className="cover-table"
+                                        src={
+                                            audioFile.picture
+                                                ? URL.createObjectURL(
+                                                      new Blob(
+                                                          [new Uint8Array(audioFile.picture.data)],
+                                                          { type: audioFile.picture.format },
+                                                      ),
+                                                  )
+                                                : music_placeholder
+                                        }
+                                    />
+                                </td>
+                                <td>{audioFile.artist ? audioFile.artist : audioFile.file.name}</td>
+                                <td>{audioFile.title}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </section>
         </div>
     );
 }
