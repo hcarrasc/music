@@ -1,4 +1,5 @@
 import { AudioPlayer } from './components/AudioPlayer';
+import ConfigsModal from './components/ConfigsModal';
 import { useState } from 'react';
 import { parseBlob } from 'music-metadata';
 import { type AudioFile } from './types/metadata.ts';
@@ -7,6 +8,7 @@ import music_placeholder from './assets/music_placeholder.png';
 export default function App() {
     const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
     const [selectedAudioFile, setSelectedAudioFile] = useState<File | null>(null);
+    const [configsModalOpen, setConfigsModalOpen] = useState(true);
 
     const handleFolder = async (e: React.ChangeEvent<HTMLInputElement>) => {
         let files = Array.from(e.target.files || []);
@@ -32,6 +34,7 @@ export default function App() {
         );
 
         setAudioFiles(audioFilesWithMetadata);
+        setConfigsModalOpen(false);
     };
 
     const handleMp3 = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, file: File) => {
@@ -41,15 +44,20 @@ export default function App() {
 
     return (
         <div className="app-container">
+            {configsModalOpen && (
+                <ConfigsModal isOpen={configsModalOpen} onClose={() => setConfigsModalOpen(false)}>
+                    <h2>Select your audio folder</h2>
+                    <input
+                        className="input-file"
+                        type="file"
+                        webkitdirectory="true"
+                        multiple
+                        onChange={handleFolder}
+                    />
+                </ConfigsModal>
+            )}
             <AudioPlayer audioFile={selectedAudioFile} />
 
-            <input
-                className="input-file"
-                type="file"
-                webkitdirectory="true"
-                multiple
-                onChange={handleFolder}
-            />
             <section className="track-list">
                 <table className="tabla-zebra">
                     <thead>
