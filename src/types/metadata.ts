@@ -17,7 +17,3 @@ export interface AudioFile {
     album?: string;
     picture?: Picture;
 }
-
-interface TagData {
-    tags: Tags;
-}
