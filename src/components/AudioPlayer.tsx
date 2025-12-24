@@ -8,6 +8,7 @@ import back from '../assets/back.png';
 import next from '../assets/next.png';
 import pause from '../assets/pause.png';
 import loop from '../assets/loop.png';
+import shuffle from '../assets/shuffle.png';
 import music_folder from '../assets/music_folder.png';
 
 interface AudioPlayerProps {
@@ -51,6 +52,22 @@ export function AudioPlayer({
                 wavesurfer.current.getMediaElement().loop = true;
                 setLoopAudioFile(true);
             }
+        }
+    };
+
+    const handleBack = () => {
+        if (!audioFiles || audioFilesIndex === undefined || !setSelectedAudioFile) return;
+        const prevFile = audioFiles?.[audioFilesIndex - 1]?.file;
+        if (prevFile) {
+            setSelectedAudioFile(prevFile);
+        }
+    };
+
+    const handleNext = () => {
+        if (!audioFiles || audioFilesIndex === undefined || !setSelectedAudioFile) return;
+        const nextFile = audioFiles?.[audioFilesIndex + 1]?.file;
+        if (nextFile) {
+            setSelectedAudioFile(nextFile);
         }
     };
 
@@ -117,8 +134,6 @@ export function AudioPlayer({
         wavesurfer.current.on('finish', () => {
             setIsPlaying(false);
             const nextFile = audioFiles?.[audioFilesIndex! + 1]?.file;
-            console.log(audioFilesIndex);
-            console.log(nextFile);
             if (nextFile && setSelectedAudioFile) {
                 setSelectedAudioFile(nextFile);
             }
@@ -151,7 +166,7 @@ export function AudioPlayer({
                                 : audioFile?.name}
                         </h3>
                         <div className="controls-container">
-                            <button onClick={handlePlayPause} className="btn-control">
+                            <button onClick={handleBack} className="btn-control">
                                 <img src={back} alt="Back" />
                             </button>
 
@@ -159,7 +174,7 @@ export function AudioPlayer({
                                 <img src={isPlaying ? pause : play} alt="Play/Pause" />
                             </button>
 
-                            <button onClick={handlePlayPause} className="btn-control">
+                            <button onClick={handleNext} className="btn-control">
                                 <img src={next} alt="Next" />
                             </button>
 
