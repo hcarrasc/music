@@ -56,7 +56,13 @@ export default function App() {
                     />
                 </ConfigsModal>
             )}
-            <AudioPlayer audioFile={selectedAudioFile} setConfigsModalOpen={setConfigsModalOpen} />
+            <AudioPlayer
+                audioFile={selectedAudioFile}
+                setConfigsModalOpen={setConfigsModalOpen}
+                audioFiles={audioFiles}
+                audioFilesIndex={audioFiles.findIndex((af) => af.file === selectedAudioFile)}
+                setSelectedAudioFile={setSelectedAudioFile}
+            />
 
             <section className="track-list">
                 <table className="tabla-zebra">

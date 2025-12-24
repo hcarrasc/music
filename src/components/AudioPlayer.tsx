@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { parseBlob } from 'music-metadata';
+import { type AudioFile } from '../types/metadata.ts';
 import music_placeholder from '../assets/music_placeholder.png';
 import play from '../assets/play.png';
 import back from '../assets/back.png';
@@ -12,9 +13,18 @@ import music_folder from '../assets/music_folder.png';
 interface AudioPlayerProps {
     audioFile: File | null;
     setConfigsModalOpen: (open: boolean) => void;
+    audioFiles?: AudioFile[];
+    audioFilesIndex?: number;
+    setSelectedAudioFile?: (file: File) => void;
 }
 
-export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps) {
+export function AudioPlayer({
+    audioFile,
+    setConfigsModalOpen,
+    audioFiles,
+    setSelectedAudioFile,
+    audioFilesIndex,
+}: AudioPlayerProps) {
     const waveformRef = useRef<HTMLDivElement>(null);
     const wavesurfer = useRef<WaveSurfer | null>(null);
 
@@ -106,6 +116,12 @@ export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps
         });
         wavesurfer.current.on('finish', () => {
             setIsPlaying(false);
+            const nextFile = audioFiles?.[audioFilesIndex! + 1]?.file;
+            console.log(audioFilesIndex);
+            console.log(nextFile);
+            if (nextFile && setSelectedAudioFile) {
+                setSelectedAudioFile(nextFile);
+            }
         });
 
         return () => {
@@ -113,7 +129,7 @@ export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps
             URL.revokeObjectURL(url);
             setIsPlaying(false);
         };
-    }, [audioFile]);
+    }, [audioFile, audioFiles, audioFilesIndex, setSelectedAudioFile]);
 
     return (
         <section className="audio-player">
