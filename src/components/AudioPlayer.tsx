@@ -6,6 +6,7 @@ import play from '../assets/play.png';
 import back from '../assets/back.png';
 import next from '../assets/next.png';
 import pause from '../assets/pause.png';
+import loop from '../assets/loop.png';
 import music_folder from '../assets/music_folder.png';
 
 interface AudioPlayerProps {
@@ -15,7 +16,7 @@ interface AudioPlayerProps {
 
 export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps) {
     const waveformRef = useRef<HTMLDivElement>(null);
-    const wavesurferRef = useRef<WaveSurfer | null>(null);
+    const wavesurfer = useRef<WaveSurfer | null>(null);
 
     const [metadata, setMetadata] = useState<{ title?: string; artist?: string; album?: string }>(
         {},
@@ -24,12 +25,24 @@ export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
-    const [folderSelected, setFolderSelected] = useState(false);
+    const [loopAudioFile, setLoopAudioFile] = useState(false);
 
     const handlePlayPause = useCallback(() => {
-        wavesurferRef.current?.playPause();
+        wavesurfer.current?.playPause();
         setIsPlaying((prev) => !prev);
     }, []);
+
+    const handleLoop = () => {
+        if (wavesurfer.current) {
+            if (loopAudioFile) {
+                wavesurfer.current.getMediaElement().loop = false;
+                setLoopAudioFile(false);
+            } else {
+                wavesurfer.current.getMediaElement().loop = true;
+                setLoopAudioFile(true);
+            }
+        }
+    };
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -81,14 +94,14 @@ export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps
             barRadius: 2,
             cursorWidth: 3,
         });
-        wavesurferRef.current = ws;
+        wavesurfer.current = ws;
 
         const url = URL.createObjectURL(audioFile);
         ws.load(url);
-        wavesurferRef.current.on('audioprocess', (time) => {
+        wavesurfer.current.on('audioprocess', (time) => {
             setCurrentTime(time);
         });
-        wavesurferRef.current.on('ready', () => {
+        wavesurfer.current.on('ready', () => {
             setTotalTime(ws.getDuration());
         });
 
@@ -128,6 +141,13 @@ export function AudioPlayer({ audioFile, setConfigsModalOpen }: AudioPlayerProps
 
                             <button onClick={handlePlayPause} className="btn-control">
                                 <img src={next} alt="Next" />
+                            </button>
+
+                            <button
+                                onClick={handleLoop}
+                                className={`btn-control ${loopAudioFile ? 'active' : ''}`}
+                            >
+                                <img src={loop} alt="Loop" />
                             </button>
 
                             <button

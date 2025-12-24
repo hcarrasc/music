@@ -57,6 +57,10 @@ body {
     cursor: pointer;
     padding: 0;
 }
+.btn-control.active img {
+    filter: invert(39%) sepia(83%) saturate(7493%) hue-rotate(204deg) brightness(102%) contrast(101%);
+}
+
 .btn-control img {
     width: 2.5rem;
     height: 2.5rem;
